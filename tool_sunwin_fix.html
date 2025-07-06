@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tool Dự Đoán Tài/Xỉu Sunwin</title>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body{
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background:#2b8187;
+        display:flex; align-items:center; justify-content:center;
+        min-height:100vh; overflow:hidden;
+        padding: 20px;
+    }
+    .tool-box{
+        position:relative;
+        width:310px;
+        background:#001330;
+        border-radius:12px;
+        padding:24px 18px 32px;
+        color:#fff;
+        text-align:center;
+        box-shadow:0 0 8px rgba(0,0,0,.6);
+    }
+    h1{
+        font-size:20px;
+        font-weight:700;
+        color:#ffd82c;
+        margin-bottom:4px;
+        line-height:1.3;
+    }
+    .copyright{
+        font-size:13px;
+        margin-bottom:16px;
+        color:#ddd;
+        font-style:italic;
+    }
+    #codeInput{
+        width:100%;
+        padding:10px 12px;
+        font-size:17px;
+        text-align:center;
+        border:none;
+        border-radius:6px;
+        margin-bottom:14px;
+        outline:none;
+    }
+    .btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
+        padding:9px 14px;
+        margin:4px 3px;
+        font-size:15px;
+        font-weight:500;
+        background:#1e90ff;
+        color:#fff;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+        transition:.2s;
+    }
+    .btn:hover{ background:#3ea0ff; }
+    #result{
+        margin:18px 0 10px;
+        font-size:19px;
+        font-weight:600;
+    }
+    #history{
+        max-height:140px;
+        overflow-y:auto;
+        font-size:14px;
+        text-align:left;
+        border:1px solid #2e4c72;
+        border-radius:6px;
+        padding:10px;
+    }
+    .snowflake{
+        position:fixed;
+        top:-10px; 
+        color:#fff; 
+        user-select:none; 
+        pointer-events:none;
+        font-size:1em;
+        animation: fall linear infinite;
+    }
+    @keyframes fall{
+        0%   { transform:translateX(var(--start-x)) translateY(-10px) rotate(0deg); }
+        100% { transform:translateX(var(--end-x))   translateY(110vh) rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+<script>
+for(let i=0;i<50;i++){
+    const span=document.createElement("span");
+    span.className="snowflake";
+    span.innerHTML="❄";
+    const size=Math.random()*1.2+0.4;
+    span.style.fontSize=size+"em";
+    span.style.opacity=Math.random()*0.8+0.2;
+    span.style.left=Math.random()*100+"vw";
+    span.style.setProperty("--start-x", (Math.random()*160-80)+"px");
+    span.style.setProperty("--end-x", (Math.random()*160-80)+"px");
+    span.style.animationDuration=(Math.random()*10+6)+"s";
+    span.style.animationDelay=(-Math.random()*15)+"s";
+    document.body.appendChild(span);
+}
+</script>
+<div class="tool-box">
+    <h1>🔮 Tool Dự Đoán Tài Xỉu Sunwin</h1>
+    <div class="copyright">Bản quyền: by <b>Nguyen Van Hao</b></div>
+    <input type="text" id="codeInput" placeholder="276597" />
+    <div>
+        <button class="btn" onclick="analyze()">📊 Phân Tích</button>
+        <button class="btn" onclick="fakeCode()">🛠️ Tạo mã giả</button>
+        <button class="btn" onclick="copyInput()">📋 Copy</button>
+    </div>
+    <h2 id="result">Kết quả: 🔵 —</h2>
+    <pre id="history"></pre>
+    <div style="margin-top:10px">
+        <button class="btn" onclick="saveSession()">💾 Lưu mã phiên</button>
+    </div>
+    <div>
+        <button class="btn" onclick="showStats()">📊 Thống kê</button>
+        <button class="btn" onclick="showRatio()">📈 Tỷ lệ Tài/Xỉu</button>
+    </div>
+    <div>
+        <button class="btn" onclick="toggleSound(true)">🔊 Bật âm</button>
+        <button class="btn" onclick="toggleSound(false)">🔇 Tắt âm</button>
+    </div>
+    <div>
+        <button class="btn" onclick="setFont('serif')">🅰️ Serif</button>
+        <button class="btn" onclick="setFont('monospace')">🔤 Monospace</button>
+    </div>
+</div>
+<script>
+function analyze(){
+    const input  = document.getElementById("codeInput");
+    const result = document.getElementById("result");
+    const hist   = document.getElementById("history");
+    const code = input.value.trim();
+
+    if (!code) {
+        alert("Vui lòng nhập mã số trước khi phân tích!");
+        return;
+    }
+
+    const isTai  = Math.random() < 0.5;
+    const symbol = isTai ? "🔴" : "🔵";
+    const text   = isTai ? "TÀI" : "XỈU";
+    const time   = new Date().toLocaleTimeString("vi-VN", {hour12:false});
+    result.textContent = `Kết quả: ${symbol} ${text}`;
+    hist.textContent   = `${symbol} ${code} → ${text} (${time})\n` + hist.textContent;
+}
+function fakeCode(){
+    document.getElementById("codeInput").value = Math.floor(Math.random()*900000+100000);
+}
+function copyInput(){
+    const val = document.getElementById("codeInput").value;
+    if (!val) return alert("Không có mã để copy!");
+    navigator.clipboard.writeText(val)
+        .then(()=>alert("Đã copy!"))
+        .catch(()=>alert("Không thể copy tự động, hãy copy thủ công."));
+}
+function saveSession(){ alert("Đã lưu (demo)"); }
+function showStats(){ alert("Tính năng demo!"); }
+function showRatio(){ alert("Tính năng demo!"); }
+function toggleSound(on){ alert((on?"Bật":"Tắt")+" âm (demo)"); }
+function setFont(f){
+    document.body.style.fontFamily = f==="serif" ? "Times New Roman, serif" : "Consolas, monospace";
+}
+</script>
+</body>
+</html>
